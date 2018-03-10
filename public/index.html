@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="EN">
+    <head>
+      <meta charset="utf-8">
+      <title>Dimensional Charting Examples</title>
+      <script type="text/javascript" src="../libs/d3.js"></script>
+      <script type="text/javascript" src="../libs/crossfilter.js"></script>
+      <script type="text/javascript" src="../libs/dc.js"></script>
+      <link rel="stylesheet" type="text/css" href="../css/dc.css" />
+      <link rel="stylesheet" type="text/css" href="../css/style.css" />
+
+
+      <style>
+
+
+      </style>
+    </head>
+    <body>
+        <h1>Dimensional Charting Examples</h1>
+        <div id="main">
+        <a href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+            <div class="row">
+                <div class="column">
+                    <div id="pieChart">
+
+                        <h2>Payment Type</h2>
+
+                        <span class="reset" style="display: none;">Range: <span class="filter"></span></span>
+                        <a class="reset" style="display:none" href="javascript:pieChart.filterAll(); dc.redrawAll();">reset</a>
+                    </div>
+                </div>
+                <div class="column">
+                    <div id="table">
+                        <h2>Payment Record</h2>
+                        <table id="dataTable" align="center" cellpadding=5></table>
+                    </div>
+                </div>
+                <div></div>
+        </div>
+            <div class="row">
+                <div class="column">
+                    <div id="bubbleChart">
+                        <h2>Tip againt Payment</h2>
+                    </div>
+                </div>
+                <div class="column">
+                    <h2>Total Amount </h2>
+                    <div id="lineChart"></div>
+                    <div id="rangeChart"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+
+                    <div id="rowChart">
+                        <h2>Quantity</h2>
+                        <span class="reset" style="display: none;">Quantity: <span class="filter"></span></span>
+                        <a class="reset" style="display:none" href="javascript:rowChart.filterAll(); dc.redrawAll();">reset</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <script type="text/javascript">
+
+
+          var paymentsRecord = [
+          {date: "2011-11-14T16:17:54Z", quantity: 2, total: 190, tip: 100, type: "tab"},
+          {date: "2011-11-14T16:20:19Z", quantity: 2, total: 190, tip: 100, type: "tab"},
+          {date: "2011-11-14T16:28:54Z", quantity: 1, total: 300, tip: 200, type: "visa"},
+          {date: "2011-11-14T16:30:43Z", quantity: 2, total: 90, tip: 0, type: "tab"},
+          {date: "2011-11-14T16:48:46Z", quantity: 2, total: 90, tip: 0, type: "tab"},
+          {date: "2011-11-14T16:53:41Z", quantity: 2, total: 90, tip: 0, type: "tab"},
+          {date: "2011-11-14T16:54:06Z", quantity: 1, total: 100, tip: 0, type: "cash"},
+          {date: "2011-11-14T16:58:03Z", quantity: 2, total: 90, tip: 0, type: "tab"},
+          {date: "2011-11-14T17:07:21Z", quantity: 2, total: 90, tip: 0, type: "tab"},
+          {date: "2011-11-14T17:22:59Z", quantity: 2, total: 90, tip: 0, type: "tab"},
+          {date: "2011-11-14T17:25:45Z", quantity: 2, total: 200, tip: 0, type: "cash"},
+          {date: "2011-11-14T17:29:52Z", quantity: 1, total: 200, tip: 100, type: "visa"}
+        ];
+
+        paymentsRecord.forEach(function(d){
+            //console.log(typeof(d.date)); //check the type before it changes
+            var orgDate = new Date(d.date); // changes the string date into origional date type
+            d.date = orgDate; // Overwrite the String date with Original date type
+        });
+
+          var facts = crossfilter(paymentsRecord);
+
+          // Data Table
+        var facts = crossfilter(paymentsRecord);
+        var dimensionByDate = facts.dimension(function(d){ return d.date; });
+
+        // Pie Chart by Payment Type
+
+        var pieDimension = facts.dimension(function(d){ return d.type; });
+        var pieGroup = pieDimension.group();
+
+        // Bubble Chart By Type
+
+        var bubbleDimension = facts.dimension(function(d){ return [d.total, d.tip]; });
+        var bubbleGroup = bubbleDimension.group();
+
+        // Composite Chart By Total Payment and Tip over time
+
+        var compGroupByTotal = dimensionByDate.group().reduceSum(function(d){ return d.total; });
+        var compGroupByTip = dimensionByDate.group().reduceSum(function(d){ return d.tip; });
+
+        var minDate = dimensionByDate.bottom(1)[0].date;
+        var maxDate = dimensionByDate.top(1)[0].date;
+
+        // Range Chart
+
+        var groupByDate = dimensionByDate.group();
+
+        var rangeGroupByTotal = dimensionByDate.group().reduceSum(function(d){ return d.total});
+        var rangeGroupByTip = dimensionByDate.group().reduceSum(function(d){ return d.tip});
+
+        // Row Chart By Quantity
+
+        var rowDimension = facts.dimension(function(d){ return d.quantity; });
+        var rowGroup = rowDimension.group();
+
+          </script>
+          <script type="text/javascript" src="charts-js/dataTable.js"></script>
+          <script type="text/javascript" src="charts-js/pieChart.js"></script>
+          <script type="text/javascript" src="charts-js/bubbleChart.js"></script>
+          <script type="text/javascript" src="charts-js/rangeChart.js"></script>
+          <script type="text/javascript" src="charts-js/rowChart.js"></script>
+
+          <script>
+            dc.renderAll();
+          </script>
+
+    </body>
+</html>

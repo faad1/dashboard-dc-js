@@ -1,0 +1,56 @@
+#main{
+    width: 100%;
+    padding: 10px;
+    //border: 1px solid black;
+}
+div{
+    overflow: auto;
+    float:left;
+}
+td {
+  border: 1px solid gainsboro;
+}
+h1, h2{
+    text-align: center;
+}
+
+
+
+
+#main .row{
+
+    width: 100%;
+
+
+}
+
+#main .row .column{
+    width: 45%;
+    height: 50%;
+    display: inline-block;
+    //border: 1px solid black;
+    margin: 10px 0 0 10px;
+}
+
+#dataTable {
+
+    border-collapse: collapse;
+    //margin: 0 auto;
+    width:90%;
+}
+
+#dataTable th {
+    color: #f2f3f4;
+    background-color: #5693ef;
+}
+
+#dataTable td, #dataTable th {
+    text-align: center;
+    width: 20%;
+
+}
+
+#dataTable tbody tr:hover {
+    background-color:#c7dbf9 ;
+    cursor: pointer;
+}
